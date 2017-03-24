@@ -1,0 +1,46 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Air Condition Remote</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-list style="margin-top: 45px" padding>
+    <ion-item>
+        <ion-label fixed>Remote</ion-label>
+        <ion-input type="tel" [(ngModel)]="remote" placeholder="+38xxxxxxx"></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-label>Power</ion-label>
+        <ion-toggle [(ngModel)]="power"></ion-toggle>
+    </ion-item>
+
+    <ion-item [hidden]="!power">
+        <ion-label>Temperature<span *ngIf="temperature">: {{ temperature }} °C</span></ion-label>
+        <ion-range [(ngModel)]="temperature" min="18" max="30">
+            <ion-icon range-left small name="sunny"></ion-icon>
+            <ion-icon range-right name="sunny"></ion-icon>
+        </ion-range>
+    </ion-item>
+
+    <ion-item [hidden]="!power">
+        <ion-label>Fan Speed</ion-label>
+        <ion-select [(ngModel)]="fanspeed">
+            <ion-option value="1">Low</ion-option>
+            <ion-option value="2">Medium</ion-option>
+            <ion-option value="3">High</ion-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item [hidden]="!power">
+        <ion-label>Mode</ion-label>
+        <ion-select [(ngModel)]="mode">
+            <ion-option value="C">Cool</ion-option>
+            <ion-option value="H">Heat</ion-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item>
+        <button (click)="onSendButtonClick()" ion-button full style="margin-top:20px; height: 40px;">Send</button>
+    </ion-item>
+</ion-list>
