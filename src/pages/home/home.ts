@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { NavController } from 'ionic-angular';
 import { SMS } from 'ionic-native';
 
@@ -53,7 +52,11 @@ export class HomePage {
             return 'OFF';
         }
 
-        return `ON T:${this.temperature}F:${this.fanspeed}M:${this.mode}`;
+        if(this.mode == 'D' || this.mode == 'A') {
+            return `ON ${this.mode}`;
+        }
+
+        return `ON T:${this.temperature} F:${this.fanspeed} M:${this.mode}`;
     }
 
     private persistSettings() {

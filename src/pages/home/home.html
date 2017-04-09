@@ -16,6 +16,16 @@
     </ion-item>
 
     <ion-item [hidden]="!power">
+        <ion-label>Mode</ion-label>
+        <ion-select [(ngModel)]="mode">
+            <ion-option value="C">Cooling</ion-option>
+            <ion-option value="H">Heating</ion-option>
+            <ion-option value="D">Dehumidification</ion-option>
+            <ion-option value="A">Automatic</ion-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item [hidden]="!power || mode == 'D' || mode == 'A'">
         <ion-label>Temperature<span *ngIf="temperature">: {{ temperature }} °C</span></ion-label>
         <ion-range [(ngModel)]="temperature" min="18" max="30">
             <ion-icon range-left small name="sunny"></ion-icon>
@@ -23,20 +33,12 @@
         </ion-range>
     </ion-item>
 
-    <ion-item [hidden]="!power">
+    <ion-item [hidden]="!power || mode == 'D' || mode == 'A'">
         <ion-label>Fan Speed</ion-label>
         <ion-select [(ngModel)]="fanspeed">
             <ion-option value="1">Low</ion-option>
             <ion-option value="2">Medium</ion-option>
             <ion-option value="3">High</ion-option>
-        </ion-select>
-    </ion-item>
-
-    <ion-item [hidden]="!power">
-        <ion-label>Mode</ion-label>
-        <ion-select [(ngModel)]="mode">
-            <ion-option value="C">Cool</ion-option>
-            <ion-option value="H">Heat</ion-option>
         </ion-select>
     </ion-item>
 
