@@ -4,10 +4,22 @@
     </ion-navbar>
 </ion-header>
 
+<button [navPush]="settingsPage">
+    <ion-icon name="settings"></ion-icon>
+</button>
+
 <ion-list style="margin-top: 45px" padding>
     <ion-item>
         <ion-label fixed>Remote</ion-label>
-        <ion-input type="tel" [(ngModel)]="remote" placeholder="+38xxxxxxx"></ion-input>
+        <ion-input required type="tel" [(ngModel)]="remote" placeholder="+38xxxxxxx" (ngModelChange)="validateRemote()"></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-label>Room temperature</ion-label>
+        <button ion-button outline item-right icon-left (click)="onRoomTemperatureButtonClick()">
+            <ion-icon name="refresh"></ion-icon>
+            {{ roomTemperature == null ? 'Refresh' : roomTemperature + ' °C' }}
+        </button>
     </ion-item>
 
     <ion-item>
@@ -35,7 +47,7 @@
 
     <ion-item [hidden]="!power || mode == 'D' || mode == 'A'">
         <ion-label>Fan Speed</ion-label>
-        <ion-select [(ngModel)]="fanspeed">
+        <ion-select [(ngModel)]="fanSpeed">
             <ion-option value="1">Low</ion-option>
             <ion-option value="2">Medium</ion-option>
             <ion-option value="3">High</ion-option>

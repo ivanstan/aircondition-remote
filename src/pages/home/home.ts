@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { SMS } from 'ionic-native';
+import { LoadingController } from 'ionic-angular';
+import { SettingsPage } from '../settings/settings';
+
+declare var SMS:any;
 
 @Component({
     selector: 'page-home',
@@ -16,16 +19,37 @@ export class HomePage {
 
     public mode:string = 'C';
 
-    public fanspeed:string = '2';
+    public fanSpeed:string = '2';
 
-    private options:any = {
-        replaceLineBreaks: false,
-        android: {
-            intent: ''
+    public settingsPage:any;
+
+    public roomTemperature:number = null;
+
+    private loader = this.loadingCtrl.create({
+        content: "Sending. Please wait...",
+        showBackdrop: false
+    });
+
+    constructor(public navCtrl:NavController,
+                public loadingCtrl:LoadingController) {
+        this.settingsPage = SettingsPage;
+
+        try {
+            SMS.enableIntercept(true);
+            SMS.startWatch();
+
+            document.addEventListener('onSMSArrive', (e:any) => {
+                let sms = e.data;
+
+                this.onSmsArrive(sms);
+
+                if(sms.address != this.remote) {
+                    SMS.restoreSMS([sms]);
+                }
+            });
+        } catch (e) {
+            console.log('SMS not supported.');
         }
-    };
-
-    constructor(public navCtrl:NavController) {
 
         if (typeof window.localStorage['settings'] != 'undefined') {
             let settings = JSON.parse(window.localStorage['settings']);
@@ -34,9 +58,18 @@ export class HomePage {
             this.temperature = settings.temperature;
             this.power = settings.power;
             this.mode = settings.mode;
-            this.fanspeed = settings.fanspeed;
+            this.fanSpeed = settings.fanSpeed;
+            this.roomTemperature = settings.roomTemperature;
         }
+    }
 
+    private onSmsArrive(sms) {
+        let body:string = sms.body;
+        alert(body);
+    }
+
+    public onRoomTemperatureButtonClick() {
+        this.send(this.remote, 'T?');
     }
 
     public onSendButtonClick() {
@@ -46,17 +79,23 @@ export class HomePage {
         this.send(this.remote, message);
     }
 
+    public validateRemote() {
+        if(this.remote.substr(0, 1) == '0') {
+            this.remote = '+381' + this.remote.substr(1, this.remote.length);
+        }
+    }
+
     private formatMessage() {
 
-        if(!this.power) {
+        if (!this.power) {
             return 'OFF';
         }
 
-        if(this.mode == 'D' || this.mode == 'A') {
+        if (this.mode == 'D' || this.mode == 'A') {
             return `ON ${this.mode}`;
         }
 
-        return `ON T:${this.temperature} F:${this.fanspeed} M:${this.mode}`;
+        return `ON T:${this.temperature} F:${this.fanSpeed} M:${this.mode}`;
     }
 
     private persistSettings() {
@@ -65,19 +104,28 @@ export class HomePage {
             temperature: this.temperature,
             power: this.power,
             mode: this.mode,
-            fanspeed: this.fanspeed
+            fanSpeed: this.fanSpeed,
+            roomTemperature: this.roomTemperature
         };
 
         window.localStorage['settings'] = JSON.stringify(settings);
     }
 
     send(remote:string, message:string) {
-        SMS.send(remote, message, this.options)
-            .then(()=>{
-                console.info(`Sent sms to: ${remote}, content: '${message}'`);
-            },()=>{
-              console.info(`Failed sending sms to: ${remote}, content: '${message}'`);
-            });
+        this.loader.present();
+
+        try {
+            SMS.sendSMS(remote, message,
+                () => {
+                    console.info(`Sent sms to: ${remote}, content: '${message}'`);
+                    this.loader.dismiss();
+                }, () => {
+                    console.info(`Failed sending sms to: ${remote}, content: '${message}'`);
+                    this.loader.dismiss();
+                });
+        } catch (e) {
+            console.log('SMS not supported.');
+        }
     }
 
 }

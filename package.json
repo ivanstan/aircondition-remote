@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "1.1.4",
+    "retyped-ng-cordova-tsd-ambient": "0.0.0-0",
     "typescript": "2.0.9"
   },
   "cordovaPlugins": [
