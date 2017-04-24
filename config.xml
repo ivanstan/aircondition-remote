@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.ionicframework.aircondition233933" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>aircondition</name>
+  <name>AC Control</name>
   <description>An awesome Ionic/Cordova app.</description>
   <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
   <content src="index.html"/>
+  <icon src="resources/icon.png" platform="ios" width="57" height="57" density="mdpi" />
   <access origin="*"/>
   <allow-navigation href="http://ionic.local/*"/>
   <allow-intent href="http://*/*"/>

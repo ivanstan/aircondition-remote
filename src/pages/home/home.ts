@@ -25,11 +25,6 @@ export class HomePage {
 
     public roomTemperature:number = null;
 
-    private loader = this.loadingCtrl.create({
-        content: "Sending. Please wait...",
-        showBackdrop: false
-    });
-
     constructor(public navCtrl:NavController,
                 public loadingCtrl:LoadingController) {
         this.settingsPage = SettingsPage;
@@ -43,7 +38,7 @@ export class HomePage {
 
                 this.onSmsArrive(sms);
 
-                if(sms.address != this.remote) {
+                if (sms.address != this.remote) {
                     SMS.restoreSMS([sms]);
                 }
             });
@@ -80,7 +75,7 @@ export class HomePage {
     }
 
     public validateRemote() {
-        if(this.remote.substr(0, 1) == '0') {
+        if (this.remote.substr(0, 1) == '0') {
             this.remote = '+381' + this.remote.substr(1, this.remote.length);
         }
     }
@@ -112,20 +107,30 @@ export class HomePage {
     }
 
     send(remote:string, message:string) {
-        this.loader.present();
+
+        var loader:any = this.loadingCtrl.create({
+            content: "Sending. Please wait...",
+            duration: 2000,
+            showBackdrop: false
+        });
+
+        loader.present();
+
+        setTimeout(() => {
+            loader.dismiss();
+        }, 1000);
 
         try {
             SMS.sendSMS(remote, message,
                 () => {
                     console.info(`Sent sms to: ${remote}, content: '${message}'`);
-                    this.loader.dismiss();
                 }, () => {
                     console.info(`Failed sending sms to: ${remote}, content: '${message}'`);
-                    this.loader.dismiss();
                 });
         } catch (e) {
             console.log('SMS not supported.');
         }
+
     }
 
 }

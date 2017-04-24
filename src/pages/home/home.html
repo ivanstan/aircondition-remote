@@ -18,7 +18,7 @@
         <ion-label>Room temperature</ion-label>
         <button ion-button outline item-right icon-left (click)="onRoomTemperatureButtonClick()">
             <ion-icon name="refresh"></ion-icon>
-            {{ roomTemperature == null ? 'Refresh' : roomTemperature + ' °C' }}
+            {{ roomTemperature == null ? 'Check Temprature' : roomTemperature + ' °C' }}
         </button>
     </ion-item>
 
@@ -32,8 +32,8 @@
         <ion-select [(ngModel)]="mode">
             <ion-option value="C">Cooling</ion-option>
             <ion-option value="H">Heating</ion-option>
-            <ion-option value="D">Dehumidification</ion-option>
-            <ion-option value="A">Automatic</ion-option>
+            <!--<ion-option value="D">Dehumidification</ion-option>-->
+            <!--<ion-option value="A">Automatic</ion-option>-->
         </ion-select>
     </ion-item>
 
